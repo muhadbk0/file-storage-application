@@ -21,11 +21,5 @@ const isAuth = jwt({
   getToken: getTokenFromHeader, // How to extract the JWT from the request
 });
 
-const isHaveAuth = jwt({
-  secret: config.jwtSecret, // The _secret_ to sign the JWTs
-  userProperty: 'token', // Use req.token to store the JWT
-  getToken: getTokenFromHeader, // How to extract the JWT from the request
-  credentialsRequired: false,
-});
 
-export  {isAuth ,isHaveAuth};
+export  {isAuth};

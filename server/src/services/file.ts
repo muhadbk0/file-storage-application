@@ -1,7 +1,5 @@
 import { Service, Inject } from 'typedi';
 import { IUser, IFile } from '../interfaces';
-
-
 @Service()
 export default class FileService {
   constructor(
@@ -28,7 +26,7 @@ export default class FileService {
     try {
       const quary = user.role==='admin'?{}:{ owner: user }
       const result = await this.fileModel.find(quary,
-        ["name", "file_path", "owner"], options)
+        ["name", "extention","file_path", "owner"], options)
       return result.map(file => ({
         user: (file.owner as IUser),
         file: (file as IFile)
@@ -41,8 +39,10 @@ export default class FileService {
   }
   public async delete(file: IFile, owner: IUser) {
     try {
-      await this.fileModel.findByIdAndDelete(file._id)
-      return { message: "success" }
+      const deletedFile  = await this.fileModel.findOneAndDelete({_id:file._id,owner})
+      if(deletedFile)
+        return { message: "success", deletedFile }
+      return { message: "file not found" }
     }
     catch (e) {
       this.logger.error(e)
@@ -50,26 +50,19 @@ export default class FileService {
     }
   }
  
-
-  public async fileUpload(user: IUser, fileName: string) {
+  public async create(file:IFile, owner: IUser) {
     try {
-      let file_path = 'baseURL/' + user._id + '/' + fileName // need to fix
-
-      // await this.fileModel.create({
-      //   ...file,
-      //   file_path,
-      //   owner
-      // } as IFile);
-      // await this.fileModel.updateOne({ _id: user._id }, { avatarFile: fileName, avatar })
-      return { message: 'avatar updated successfully ', }
+      await this.fileModel.create({
+        ...file,
+        owner
+      } as IFile);
+      return { message: 'file updated successfully ', file }
     }
     catch (e) {
       this.logger.info(e)
       throw e
     }
   }
-
-
 
   public async update(file: IFile, owner: IUser) {
     try {
@@ -81,5 +74,4 @@ export default class FileService {
       throw e;
     }
   }
-
 }

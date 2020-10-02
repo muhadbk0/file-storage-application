@@ -10,7 +10,7 @@ import paramOptions from '../../util/paramOptions'
 const route = Router();
 export default (app: Router) => {
   app.use('/users', route)
-  route.get('/search/:text', middlewares.isHaveAuth, middlewares.attachCurrentUser, async (req: Request, res: Response, next: NextFunction) => {
+  route.get('/search/:text', middlewares.isAuth, middlewares.attachCurrentUser, async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userServiceInstance = Container.get(UserService)
       const options = paramOptions(req);
@@ -32,7 +32,6 @@ export default (app: Router) => {
       return next(e);
     }
   });
-
   route.put('/me', validator.userUpdate, middlewares.isAuth, middlewares.attachCurrentUser, async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userServiceInstance = Container.get(UserService)
@@ -50,7 +49,7 @@ export default (app: Router) => {
     return res.json(data).status(200);
   });
 
-  route.get('/profile/:id', middlewares.isHaveAuth, middlewares.attachCurrentUser, async (req: Request, res: Response, next: NextFunction) => {
+  route.get('/profile/:id', middlewares.isAuth, middlewares.attachCurrentUser, async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userServiceInstance = Container.get(UserService)
       const options = paramOptions(req);

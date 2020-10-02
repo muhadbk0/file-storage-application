@@ -12,8 +12,8 @@ export default class AuthService {
   ) { }
 
   public async register(user:IUserInputDTO) {
-    const userRecord = await this.userModel.findOne({ email:user.email });
     try {
+      const userRecord = await this.userModel.findOne({ email:user.email });
       this.logger.silly('Hashing password');
       const hashedPassword = await bcrypt.hash(user.password, 8)
       // verification Email Here
@@ -30,7 +30,7 @@ export default class AuthService {
       }
       
     } catch (e) {
-      this.logger.error(e);
+      console.log(e)
       throw e;
     }
   }

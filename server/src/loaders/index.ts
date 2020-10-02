@@ -4,7 +4,7 @@ import mongooseLoader from './mongoose';
 import jobsLoader from './jobs';
 import Logger from './logger';
 //We have to import at least all the events once so they can be triggered
-import './events';
+// import './events';
 
 
 export default async ({ expressApp }) => {
@@ -26,7 +26,7 @@ export default async ({ expressApp }) => {
   };
  
   const fileModel = {
-    name: 'videoModel',
+    name: 'fileModel',
     model: require('../models/file').default,
   };
 
@@ -35,7 +35,7 @@ export default async ({ expressApp }) => {
     mongoConnection,
     models: [
       userModel,
-      fileModel,
+      fileModel
       // whateverModel
     ],
   });

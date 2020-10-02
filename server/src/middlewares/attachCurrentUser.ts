@@ -17,7 +17,7 @@ const attachCurrentUser = async (req, res, next) => {
       return res.sendStatus(401);
     }
     const currentUser = userRecord.toObject();
-    Reflect.deleteProperty(currentUser, 'otp');
+    Reflect.deleteProperty(currentUser, 'password');
     req.currentUser = Object.freeze(currentUser);
   }
   else{

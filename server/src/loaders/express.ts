@@ -1,4 +1,5 @@
 import express from 'express';
+import path from'path';
 import cors from 'cors';
 import compression from 'compression';
 import responseTime from 'response-time';
@@ -39,9 +40,12 @@ export default ({ app }: { app: express.Application }) => {
 
   // Middleware that transforms the raw string of req.body into json
   app.use(express.json());
+  // define public file paths
+  app.use(express.static(path.join(__dirname,'..','..','/public')));
   // Load API routes
   app.use(config.api.prefix,routes() );
 
+  
   /// catch 404 and forward to error handler
   app.use((req, res, next) => {
     const err = new Error('Not Found');

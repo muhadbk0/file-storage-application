@@ -9,12 +9,17 @@ const register = celebrate({
 })
 const login = celebrate({
   body: Joi.object({
-    name: Joi.string().required(),
     email:Joi.string().required(),
     password:Joi.string().min(6).max(20).required(),
   })
 })
-
+const file = celebrate({
+  body: Joi.object({
+    name: Joi.string().required(),
+    extention:Joi.string().required(),
+    file_path:Joi.string().required(),
+  })
+})
 const userUpdate = celebrate({
   body: Joi.object({
     name: Joi.string(),
@@ -32,5 +37,6 @@ const userUpdate = celebrate({
 export default {
   userUpdate,
   register,
-  login
+  login,
+  file
 };
