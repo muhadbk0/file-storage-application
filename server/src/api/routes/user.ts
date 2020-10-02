@@ -10,11 +10,11 @@ import paramOptions from '../../util/paramOptions'
 const route = Router();
 export default (app: Router) => {
   app.use('/users', route)
-  route.get('/search/:text', middlewares.isAuth, middlewares.attachCurrentUser, async (req: Request, res: Response, next: NextFunction) => {
+  route.get('/search/:text', middlewares.isAuth, middlewares.attachCurrentUser,middlewares.isAdmin ,async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userServiceInstance = Container.get(UserService)
       const options = paramOptions(req);
-      const data = await userServiceInstance.search(req.currentUser as IUser, req.params.text as string, options)
+      const data = await userServiceInstance.search(req.params.text as string, options)
       return res.json(data).status(200);
     }
     catch (e) {
@@ -24,8 +24,7 @@ export default (app: Router) => {
   route.get('/me', middlewares.isAuth, middlewares.attachCurrentUser, async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userServiceInstance = Container.get(UserService)
-      const options = paramOptions(req);
-      const data = await userServiceInstance.getUserProfile(req.currentUser as IUser, req.currentUser as IUser, options)
+      const data = await userServiceInstance.getUserProfile(req.currentUser as IUser)
       return res.json(data).status(200);
     }
     catch (e) {
@@ -49,11 +48,10 @@ export default (app: Router) => {
     return res.json(data).status(200);
   });
 
-  route.get('/profile/:id', middlewares.isAuth, middlewares.attachCurrentUser, async (req: Request, res: Response, next: NextFunction) => {
+  route.get('/profile/:id', middlewares.isAuth, middlewares.attachCurrentUser,middlewares.isAdmin,  async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userServiceInstance = Container.get(UserService)
-      const options = paramOptions(req);
-      const data = await userServiceInstance.getUserProfile({ _id: req.params.id } as IUser, req.currentUser as IUser, options)
+      const data = await userServiceInstance.getUserProfile({ _id: req.params.id } as IUser)
       return res.json(data).status(200);
     }
     catch (e) {

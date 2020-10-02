@@ -6,7 +6,6 @@ import upload from '../../middlewares/mediaupload'
 import paramOptions from '../../util/paramOptions'
 import validator from '../validator'
 import { IUser, IFile } from '../../interfaces'
-import user from './user'
 
 const route = Router();
 export default (app: Router) => {

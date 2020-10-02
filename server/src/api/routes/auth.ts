@@ -41,12 +41,12 @@ export default (app: Router) => {
   )
 
   route.post(
-    '/signout',
+    '/logout',
     middlewares.isAuth,
     (req: Request, res: Response, next: NextFunction) => {
       logger.debug('Calling Sign-Out endpoint with body: %o', req.body)
       try {
-        //@TODO AuthService.Logout(req.user) do some clever stuff
+        // AuthService.Logout(req.user) do some clever stuff
         //jwtr.destroy(token)
         return res.status(200).end()
       } catch (e) {
@@ -57,12 +57,12 @@ export default (app: Router) => {
   )
 
   route.post(
-    '/allsignout',
+    '/logoutall',
     middlewares.isAuth,
     (req: Request, res: Response, next: NextFunction) => {
       logger.debug('Calling Sign-Out endpoint with body: %o', req.body)
       try {
-        //@TODO AuthService.Logout(req.user) do some clever stuff
+        // AuthService.Logout(req.user) do some clever stuff
         return res.status(200).end()
       } catch (e) {
         logger.error('🔥 error %o', e)

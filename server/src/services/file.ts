@@ -9,12 +9,9 @@ export default class FileService {
   public async search(user: IUser, text: string, options) {
     try {
       const regex = new RegExp(text, 'i'); //{$text: {$search: text}}
-      const result = await this.fileModel.find({ title: regex },
+      return await this.fileModel.find({ title: regex },
         ["name", "file_path", "owner"], options)
-      return result.map(file => ({
-        user: (file.owner as IUser),
-        file: (file as IFile)
-      }));
+        .populate("owner",["name","email","social","status","role"]).exec()
     }
     catch (e) {
       this.logger.error(e)
@@ -25,12 +22,9 @@ export default class FileService {
   public async list(user: IUser, options) {
     try {
       const quary = user.role==='admin'?{}:{ owner: user }
-      const result = await this.fileModel.find(quary,
+      return await this.fileModel.find(quary,
         ["name", "extention","file_path", "owner"], options)
-      return result.map(file => ({
-        user: (file.owner as IUser),
-        file: (file as IFile)
-      }));
+        .populate("owner",["name","email","social","status","role"]).exec()
     }
     catch (e) {
       this.logger.error(e)
@@ -41,7 +35,7 @@ export default class FileService {
     try {
       const deletedFile  = await this.fileModel.findOneAndDelete({_id:file._id,owner})
       if(deletedFile)
-        return { message: "success", deletedFile }
+        return { message: "success", file:deletedFile }
       return { message: "file not found" }
     }
     catch (e) {

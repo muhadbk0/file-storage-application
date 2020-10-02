@@ -1,6 +1,5 @@
 import { Service, Inject } from 'typedi';
 import { IUser, IFile } from '../interfaces';
-import userStructure from '../util/userStructure'
 
 @Service()
 export default class UserService {
@@ -9,12 +8,13 @@ export default class UserService {
     @Inject('logger') private logger,
   ) { }
 
-  public async search(currentUser: IUser, text: string, options) {
+  public async search(text: string, options) {
     try {
       let result: Array<IUser> = [];
       const regex = new RegExp(text, 'i'); 
-      result = await this.userModel.find({ $or: [{ 'name': regex }, { 'email': regex }] }, null, options).select(['name', 'email', 'avathar'])
-      return result.map(user => userStructure(user))
+      return await this.userModel.find({ $or: [{ 'name': regex }, { 'email': regex }] }, null, options)
+      .select(["name","email","social","status","role", 'avathar'])
+       
     }
     catch (e) {
       this.logger.error(e)
@@ -43,11 +43,11 @@ export default class UserService {
       throw e
     }
   }
-  public async getUserProfile(user: IUser, currentUser: IUser, options) {
+  public async getUserProfile(user: IUser) {
     try {
-      const  userdetails = await this.userModel.findById(user)
+      return await this.userModel.findById(user)
+      .select(["name","email","social","status","role", 'avathar'])
           .populate('fileCount');
-      return userStructure(userdetails as IUser)
     }
     catch (e) {
       this.logger.error(e)

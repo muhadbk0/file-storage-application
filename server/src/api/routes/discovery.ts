@@ -9,7 +9,7 @@ const route = Router();
 export default (app: Router) => {
   app.use(route)
    
-  route.get('/home', middlewares.isHaveAuth, middlewares.attachCurrentUser, async (req: Request, res: Response, next: NextFunction) => {
+  route.get('/home', middlewares.isAuth, middlewares.attachCurrentUser, async (req: Request, res: Response, next: NextFunction) => {
     try {
       const discoveryServiceInstance = Container.get(DiscoveryService)
       const options = paramOptions(req);

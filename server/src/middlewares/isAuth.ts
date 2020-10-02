@@ -22,4 +22,4 @@ const isAuth = jwt({
 });
 
 
-export  {isAuth};
+export default isAuth;
