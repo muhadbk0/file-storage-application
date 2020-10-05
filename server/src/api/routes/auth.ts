@@ -32,7 +32,7 @@ export default (app: Router) => {
       try {
         const authServiceInstance = Container.get(AuthService)
         const result = await authServiceInstance.register(req.body as IUser)
-        return res.json(result.data).status(result.status)
+        return res.json(result).status(201)
       } catch (e) {
         logger.error('🔥 error: %o', e)
         return next(e)

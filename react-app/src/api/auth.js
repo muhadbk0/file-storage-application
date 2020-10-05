@@ -11,15 +11,30 @@ const authProvider = {
     const response = await fetch(request);
     if (response.status < 200 || response.status >= 300) {
       const error = await response.json();
-      if(response.status===500)
-        throw new Error(error.errors.message);
-    throw new Error(error);  
+      if (response.status === 500) throw new Error(error.errors.message);
+      throw new Error(error);
     }
     const { token, user } = await response.json();
     const decodedToken = decodeJwt(token);
     localStorage.setItem("token", token);
     localStorage.setItem("role", decodedToken.role);
     return { ...user, token };
+  },
+  register: async (name, email, password) => {
+    const request = new Request(`${BASE_URL + API_END_POINT}/auth/register`, {
+      method: "POST",
+      body: JSON.stringify({ name, email, password }),
+      headers: new Headers({ "Content-Type": "application/json" }),
+    });
+    const response = await fetch(request);
+    if (response.status < 200 || response.status >= 300) {
+      const error = await response.json();
+      if (response.status === 500 || response.status === 432 ) throw new Error(error.errors.message);
+      throw new Error(error);
+    }
+    const reuslt = await response.json();
+    console.log(reuslt)
+    return reuslt.message
   },
   getProfile: async (token) => {
     console.log("getProfile api return user: ");
@@ -33,12 +48,11 @@ const authProvider = {
     const response = await fetch(request);
     if (response.status < 200 || response.status >= 300) {
       const error = await response.json();
-      if(response.status===500)
-        throw new Error(error.errors.message);
-    throw new Error(error);  
+      if (response.status === 500) throw new Error(error.errors.message);
+      throw new Error(error);
     }
     const user = await response.json();
-    return user
+    return user;
   },
   logout: () => {
     localStorage.removeItem("token");

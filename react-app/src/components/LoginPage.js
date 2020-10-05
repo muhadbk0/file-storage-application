@@ -22,8 +22,8 @@ export const LoginPage = ({ startLogin }) => {
       <div className="box-layout__box">
         <h1 className="box-layout__title">File Storage Application</h1>
         <form onSubmit={login}>
-          <input type="text" name="email"></input>
-          <input type="password" name="password"></input>
+          <input type="text" name="email" placeholder="email"></input>
+          <input type="password" name="password" placeholder="password"></input>
           <button className="button">Login</button>
           <button className="button" onClick={register}>Register</button>
         </form>

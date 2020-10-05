@@ -19,7 +19,7 @@ const fileProvider = {
     const user = await response.json();
     return user
   },
-  fileUpload: async (file,token) => {
+  fileUpload: async (token,file) => {
     try {
       const formData = new FormData();
       formData.append("file", file);
@@ -35,6 +35,7 @@ const fileProvider = {
       return fileUrl;
     } catch (e) {
       console.warn(e.message);
+      throw e
     }
   },
 };

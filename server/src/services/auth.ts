@@ -2,7 +2,7 @@ import { Service, Inject } from 'typedi';
 import jwt from 'jsonwebtoken';
 import config from '../config';
 import bcrypt from 'bcrypt';
-import { IUser,IUserInputDTO } from '../interfaces/IUser';
+import { IUser, IUserInputDTO } from '../interfaces/IUser';
 
 @Service()
 export default class AuthService {
@@ -11,9 +11,9 @@ export default class AuthService {
     @Inject('logger') private logger,
   ) { }
 
-  public async register(user:IUserInputDTO) {
+  public async register(user: IUserInputDTO) {
     try {
-      const userRecord = await this.userModel.findOne({ email:user.email });
+      const userRecord = await this.userModel.findOne({ email: user.email });
       this.logger.silly('Hashing password');
       const hashedPassword = await bcrypt.hash(user.password, 8)
       // verification Email Here
@@ -22,45 +22,47 @@ export default class AuthService {
 
       if (!userRecord) {
         this.logger.silly('Creating user db record')
-        await this.userModel.create( {...user, password:hashedPassword } as IUser)
-        return {data:{ status: "success" } ,status:201}
+        await this.userModel.create({ ...user, password: hashedPassword } as IUser)
+        return {message:"success"} 
       }
-      else { 
-        return {data:{ status: "Email already Registred, Please login "} ,status:429}
+      else {
+        const error = new Error('Email already Registred, Please login')
+        error['status'] = 432;
+        throw error
       }
-      
+
     } catch (e) {
       console.log(e)
       throw e;
     }
   }
-  public async login(user:IUserInputDTO) {
-    const userRecord = await this.userModel.findOne({email:user.email});
+  public async login(user: IUserInputDTO) {
+    const userRecord = await this.userModel.findOne({ email: user.email });
     if (!userRecord) {
-      return { data: "User not registered", status: 404 } 
+      return { data: "User not registered", status: 404 }
       //throw new Error('User not registered');
     }
     this.logger.silly('Checking password');
-    try{
-    const validPassword = await bcrypt.compare(user.password, userRecord.password);
-    if (validPassword) {
-      this.logger.silly('Password is valid!');
-      this.logger.silly('Generating JWT');
-      const token = this.generateToken(userRecord);
-      // updating user status 
-      const user = userRecord.toObject();
-      Reflect.deleteProperty(user, 'password');
-      /**
-       * Easy as pie, you don't need passport.js anymore :)
-       */
-      return { data:{ user, token }, status: 201 }
-    } else {
-      return { data: "Invalid Password", status: 401 }
+    try {
+      const validPassword = await bcrypt.compare(user.password, userRecord.password);
+      if (validPassword) {
+        this.logger.silly('Password is valid!');
+        this.logger.silly('Generating JWT');
+        const token = this.generateToken(userRecord);
+        // updating user status 
+        const user = userRecord.toObject();
+        Reflect.deleteProperty(user, 'password');
+        /**
+         * Easy as pie, you don't need passport.js anymore :)
+         */
+        return { data: { user, token }, status: 201 }
+      } else {
+        return { data: "Invalid Password", status: 401 }
+      }
     }
-  }
-  catch(e){
-    return { data: "Password Validation failed", status: 429 }
-  }
+    catch (e) {
+      return { data: "Password Validation failed", status: 429 }
+    }
   }
 
   private generateToken(user) {
