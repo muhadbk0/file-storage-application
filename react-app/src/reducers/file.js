@@ -1,8 +1,12 @@
-export default (state = {}, action) => {
+export default (state = { files: [] }, action) => {
   switch (action.type) {
-    case 'LIST':
+    case "LIST":
       return {
-        files:action.files
+        files: action.files,
+      };
+    case "ADD_FILE":
+      return {
+        files: action.files.concat(state.files),
       };
     default:
       return state;

@@ -1,8 +1,10 @@
-import React from 'react';
-
+import React from "react";
+import FileList from "./FileList";
+import UploadFile from "./UploadFile";
 const DashboardPage = () => (
   <div>
-    Dashboard page content
+    <UploadFile />
+    <FileList />
   </div>
 );
 

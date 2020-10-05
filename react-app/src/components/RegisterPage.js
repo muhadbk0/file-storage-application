@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { startRegister, profile } from "../actions/auth";
+import { startRegister } from "../actions/auth";
 import { history } from "../routers/AppRouter";
 export const RegisterPage = ({ startRegister }) => {
   const register = async(e) => {

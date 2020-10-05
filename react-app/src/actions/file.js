@@ -5,13 +5,18 @@ export const list = (files) => ({
   files,
 });
 
-export const getList = (token) =>  async() =>
-  await fileProvider.list(token);
+export const getList = (token,page) =>  async() =>
+  await fileProvider.list(token,page);
 
 export const upload = (files) => ({
   type: "UPLOAD",
   files,
 });
 
-export const fileUpload = (token,file) => async () =>
-  await authProvider.fileUpload(token,file);
+export const addFile = (files) => ({
+  type: "ADD_FILE",
+  files,
+});
+
+export const startUpload = (token,file) => async () =>
+  await fileProvider.fileUpload(token,file);

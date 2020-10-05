@@ -1,8 +1,8 @@
-import { BASE_URL, API_END_POINT,FILE_PATH } from "../const";
+import { BASE_URL, API_END_POINT } from "../const";
 
 const fileProvider = {
-  list: async (token) => {
-    const request = new Request(`${BASE_URL + API_END_POINT}/files/list`, {
+  list: async (token,page) => {
+    const request = new Request(`${BASE_URL + API_END_POINT}/files/list?_end=${page*10}&_start=${page*10 - 10}`, {
       method: "GET",
       headers: new Headers({
         "Content-Type": "application/json",
@@ -23,16 +23,15 @@ const fileProvider = {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const result = await fetch(`${BASE_URL + API_END_POINT}/files/create`, {
+      const response = await fetch(`${BASE_URL + API_END_POINT}/files/create`, {
         method: "post",
         body: formData,
         headers: new Headers({
           Authorization: `Bearer ${token}`,
         }),
       });
-      const file_name = await result.json();
-      const fileUrl = BASE_URL + FILE_PATH + file_name;
-      return fileUrl;
+      const file_name = await response.json();
+      return file_name;
     } catch (e) {
       console.warn(e.message);
       throw e
