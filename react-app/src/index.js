@@ -7,6 +7,8 @@ import LoadingPage from "./components/LoadingPage";
 import authProvider from "./api/auth";
 import { login, logout, profile, getProfile } from "./actions/auth";
 import * as serviceWorker from "./serviceWorker";
+import './styles/styles.scss'
+
 const store = configureStore();
 
 const jsx = (
