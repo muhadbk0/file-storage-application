@@ -12,9 +12,9 @@ const UploadFile = ({ startUpload,addFile,user }) => {
       })();
     }
   }, []);
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop,accept: '.pdf' });
   return (
-    <div {...getRootProps()}>
+    <div {...getRootProps()} className="drop">
       <input {...getInputProps()} />
       {isDragActive ? (
         <p>Drop the files here ...</p>
